@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('README.md') as f:
     readme = f.read()
@@ -11,7 +11,8 @@ setup(
     author='ExactTarget',
     author_email='code@exacttarget.com',
     py_modules=['ET_Client'],
-    packages=['FuelSDK'],
+    packages=find_packages(),
+    package_data={'FuelSDK': ['*.xml']},
     url='https://github.com/ExactTarget/FuelSDK-Python',
     license='MIT',
     classifiers=[
