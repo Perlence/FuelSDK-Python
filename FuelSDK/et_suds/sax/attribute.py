@@ -18,11 +18,9 @@
 Provides XML I{attribute} classes.
 """
 
-import et_suds.sax
 from logging import getLogger
-from et_suds import *
-from et_suds.sax import *
-from et_suds.sax.text import Text
+from . import *
+from .text import Text
 
 log = getLogger(__name__)
 

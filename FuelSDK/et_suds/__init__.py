@@ -19,9 +19,6 @@ Suds is a lightweight SOAP python client that provides a
 service proxy for Web Services.
 """
 
-import os
-import sys
-
 #
 # Project properties
 #

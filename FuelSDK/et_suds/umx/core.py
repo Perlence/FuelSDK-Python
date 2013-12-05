@@ -19,11 +19,10 @@ Provides base classes for XML->object I{unmarshalling}.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.umx import *
-from et_suds.umx.attrlist import AttrList
-from et_suds.sax.text import Text
-from et_suds.sudsobject import Factory, merge
+from . import *
+from .attrlist import AttrList
+from ..sax.text import Text
+from ..sudsobject import Factory, merge
 
 
 log = getLogger(__name__)

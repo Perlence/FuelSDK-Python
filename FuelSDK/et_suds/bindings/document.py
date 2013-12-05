@@ -19,9 +19,8 @@ Provides classes for the (WS) SOAP I{document/literal}.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.bindings.binding import Binding
-from et_suds.sax.element import Element
+from ..bindings.binding import Binding
+from ..sax.element import Element
 
 log = getLogger(__name__)
 

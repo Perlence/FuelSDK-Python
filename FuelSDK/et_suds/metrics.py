@@ -21,7 +21,6 @@ designed for collecting and reporting performance metrics.
 
 import time
 from logging import getLogger
-from et_suds import *
 from math import modf
 
 log = getLogger(__name__)

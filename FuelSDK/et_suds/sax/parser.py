@@ -27,16 +27,16 @@ containing the prefix and the URI.  Eg: I{('tns', 'http://myns')}
 """
 
 from logging import getLogger
-import et_suds.metrics
-from et_suds import *
-from et_suds.sax import *
-from et_suds.sax.document import Document
-from et_suds.sax.element import Element
-from et_suds.sax.text import Text
-from et_suds.sax.attribute import Attribute
 from xml.sax import make_parser, InputSource, ContentHandler
 from xml.sax.handler import feature_external_ges
 from cStringIO import StringIO
+
+from .. import metrics
+from .document import Document
+from .element import Element
+from .text import Text
+from .attribute import Attribute
+
 
 log = getLogger(__name__)
 

@@ -21,10 +21,12 @@ provide wsdl/xsd named type resolution.
 
 import re
 from logging import getLogger
-from et_suds import *
-from et_suds.sax import splitPrefix, Namespace
-from et_suds.sudsobject import Object
-from et_suds.xsd.query import BlindQuery, TypeQuery, qualify
+
+from . import *
+from .sax import splitPrefix, Namespace
+from .sudsobject import Object
+from .xsd import qualify
+from .xsd.query import BlindQuery
 
 log = getLogger(__name__)
 

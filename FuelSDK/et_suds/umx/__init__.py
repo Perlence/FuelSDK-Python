@@ -19,7 +19,7 @@ Provides modules containing classes to support
 unmarshalling (XML).
 """
 
-from et_suds.sudsobject import Object
+from ..sudsobject import Object
 
 
 class Content(Object):

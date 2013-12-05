@@ -19,29 +19,28 @@ The I{2nd generation} service proxy provides access to web services.
 See I{README.txt}
 """
 
-import et_suds
-import et_suds.metrics as metrics
 from cookielib import CookieJar
-from et_suds import *
-from et_suds.reader import DefinitionsReader
-from et_suds.transport import TransportError, Request
-from et_suds.transport.https import HttpAuthenticated
-from et_suds.servicedefinition import ServiceDefinition
-from et_suds import sudsobject
+from copy import deepcopy
+from logging import getLogger
+
+from . import *
+from .reader import DefinitionsReader
+from .transport import TransportError, Request
+from .transport.https import HttpAuthenticated
+from .servicedefinition import ServiceDefinition
+from . import sudsobject, metrics
 from sudsobject import Factory as InstFactory
 from sudsobject import Object
-from et_suds.resolver import PathResolver
-from et_suds.builder import Builder
-from et_suds.wsdl import Definitions
-from et_suds.cache import ObjectCache
-from et_suds.sax.document import Document
-from et_suds.sax.parser import Parser
-from et_suds.options import Options
-from et_suds.properties import Unskin
-from urlparse import urlparse
-from copy import deepcopy
-from et_suds.plugin import PluginContainer
-from logging import getLogger
+from .resolver import PathResolver
+from .builder import Builder
+from .wsdl import Definitions
+from .cache import ObjectCache
+from .sax.document import Document
+from .sax.parser import Parser
+from .options import Options
+from .properties import Unskin
+from .plugin import PluginContainer
+
 
 log = getLogger(__name__)
 
@@ -195,9 +194,9 @@ class Client(object):
 
     def __unicode__(self):
         s = ['\n']
-        build = et_suds.__build__.split()
+        build = __build__.split()
         s.append('Suds ( https://fedorahosted.org/et_suds/ )')
-        s.append('  version: %s' % et_suds.__version__)
+        s.append('  version: %s' % __version__)
         s.append(' %s  build: %s' % (build[0], build[1]))
         for sd in self.sd:
             s.append('\n\n%s' % unicode(sd))

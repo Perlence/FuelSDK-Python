@@ -20,10 +20,10 @@ schema objects.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.xsd import *
-from et_suds.sax.element import Element
-from et_suds.sax import Namespace
+from . import *
+from .. import Repr, objid
+from ..sax.element import Element
+from ..sax import Namespace
 
 log = getLogger(__name__)
 

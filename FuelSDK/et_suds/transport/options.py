@@ -18,8 +18,7 @@
 Contains classes for transport options.
 """
 
-from et_suds.transport import *
-from et_suds.properties import *
+from ..properties import Skin, Definition
 
 
 class Options(Skin):

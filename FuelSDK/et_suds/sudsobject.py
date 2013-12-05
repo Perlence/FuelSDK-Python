@@ -21,8 +21,10 @@ wsdl/xsd defined types.
 """
 
 from logging import getLogger
-from et_suds import *
 from new import classobj
+
+from . import tostr
+
 
 log = getLogger(__name__)
 

@@ -18,8 +18,7 @@
 Contains XML text classes.
 """
 
-from et_suds import *
-from et_suds.sax import *
+from .. import sax
 
 
 class Text(unicode):

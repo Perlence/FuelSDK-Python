@@ -18,10 +18,8 @@
 Provides basic unmarshaller classes.
 """
 
-from logging import getLogger
-from et_suds import *
-from et_suds.umx import *
-from et_suds.umx.core import Core
+from . import Content
+from .core import Core
 
 
 class Basic(Core):

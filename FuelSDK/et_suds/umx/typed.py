@@ -19,11 +19,11 @@ Provides typed unmarshaller classes.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.umx import *
-from et_suds.umx.core import Core
-from et_suds.resolver import NodeResolver, Frame
-from et_suds.sudsobject import Factory
+from .. import *
+from . import *
+from .core import Core
+from ..resolver import NodeResolver, Frame
+from ..sudsobject import Factory
 
 log = getLogger(__name__)
 

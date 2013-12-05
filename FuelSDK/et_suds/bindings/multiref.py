@@ -19,8 +19,7 @@ Provides classes for handling soap multirefs.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.sax.element import Element
+from ..sax.element import Element
 
 log = getLogger(__name__)
 

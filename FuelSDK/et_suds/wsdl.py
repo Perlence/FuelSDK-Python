@@ -21,18 +21,20 @@ found in the document.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.sax import splitPrefix
-from et_suds.sax.element import Element
-from et_suds.bindings.document import Document
-from et_suds.bindings.rpc import RPC, Encoded
-from et_suds.xsd import qualify, Namespace
-from et_suds.xsd.schema import Schema, SchemaCollection
-from et_suds.xsd.query import ElementQuery
-from et_suds.sudsobject import Object, Facade, Metadata
-from et_suds.reader import DocumentReader, DefinitionsReader
 from urlparse import urljoin
-import re, soaparray
+import re
+
+from . import objid, TypeNotFound, MethodNotFound
+from .sax import Namespace
+from .sax.element import Element
+from .bindings.document import Document
+from .bindings.rpc import RPC, Encoded
+from .xsd import qualify
+from .xsd.schema import Schema, SchemaCollection
+from .xsd.query import ElementQuery
+from .sudsobject import Object, Facade, Metadata
+from .reader import DocumentReader
+
 
 log = getLogger(__name__)
 

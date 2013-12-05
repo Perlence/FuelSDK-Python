@@ -20,14 +20,15 @@ I{basic} schema objects.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.xsd import *
-from et_suds.xsd.sxbase import *
-from et_suds.xsd.query import *
-from et_suds.sax import splitPrefix, Namespace
-from et_suds.transport import TransportError
-from et_suds.reader import DocumentReader
 from urlparse import urljoin
+
+from .. import *
+from . import *
+from .sxbase import *
+from .query import *
+from ..sax import Namespace
+from ..transport import TransportError
+from ..reader import DocumentReader
 
 
 log = getLogger(__name__)

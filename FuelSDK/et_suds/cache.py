@@ -19,15 +19,15 @@ Contains basic caching classes.
 """
 
 import os
-import et_suds
 from tempfile import gettempdir as tmp
-from et_suds.transport import *
-from et_suds.sax.parser import Parser
-from et_suds.sax.element import Element
 from datetime import datetime as dt
 from datetime import timedelta
-from cStringIO import StringIO
 from logging import getLogger
+
+from . import __version__
+from .sax.parser import Parser
+from .sax.element import Element
+
 
 try:
     import cPickle as pickle
@@ -272,12 +272,12 @@ class FileCache(Cache):
             f = self.open(path)
             version = f.read()
             f.close()
-            if version != et_suds.__version__:
+            if version != __version__:
                 raise Exception()
         except:
             self.clear()
             f = self.open(path, 'w')
-            f.write(et_suds.__version__)
+            f.write(__version__)
             f.close()
 
     def __fn(self, id):

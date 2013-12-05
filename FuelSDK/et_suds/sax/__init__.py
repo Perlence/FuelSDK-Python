@@ -29,7 +29,7 @@ containing the prefix and the URI.  Eg: I{('tns', 'http://myns')}
 @type encoder: L{Encoder}
 """
 
-from et_suds.sax.enc import Encoder
+from .enc import Encoder
 
 #
 # pluggable XML special character encoder.

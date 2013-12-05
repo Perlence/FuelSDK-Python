@@ -22,17 +22,16 @@ Most of the I{value-add} provided by the model is centered around
 tranparent referenced type resolution and targeted denormalization.
 """
 
-import et_suds.metrics
-from et_suds import *
-from et_suds.xsd import *
-from et_suds.xsd.sxbuiltin import *
-from et_suds.xsd.sxbasic import Factory as BasicFactory
-from et_suds.xsd.sxbuiltin import Factory as BuiltinFactory
-from et_suds.xsd.sxbase import SchemaObject
-from et_suds.xsd.deplist import DepList
-from et_suds.sax.element import Element
-from et_suds.sax import splitPrefix, Namespace
 from logging import getLogger
+
+from .. import objid, Repr
+from . import isqref
+from .sxbuiltin import *
+from .sxbasic import Factory as BasicFactory
+from .deplist import DepList
+from ..sax.element import Element
+from ..sax import splitPrefix, Namespace
+
 
 log = getLogger(__name__)
 

@@ -19,22 +19,24 @@ Provides classes for (WS) SOAP bindings.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.sax import Namespace
-from et_suds.sax.parser import Parser
-from et_suds.sax.document import Document
-from et_suds.sax.element import Element
-from et_suds.sudsobject import Factory, Object
-from et_suds.mx import Content
-from et_suds.mx.literal import Literal as MxLiteral
-from et_suds.umx.basic import Basic as UmxBasic
-from et_suds.umx.typed import Typed as UmxTyped
-from et_suds.bindings.multiref import MultiRef
-from et_suds.xsd.query import TypeQuery, ElementQuery
-from et_suds.xsd.sxbasic import Element as SchemaElement
-from et_suds.options import Options
-from et_suds.plugin import PluginContainer
 from copy import deepcopy
+
+from .. import WebFault, TypeNotFound
+from ..sax import Namespace
+from ..sax.parser import Parser
+from ..sax.document import Document
+from ..sax.element import Element
+from ..sudsobject import Factory
+from ..mx import Content
+from ..mx.literal import Literal as MxLiteral
+from ..umx.basic import Basic as UmxBasic
+from ..umx.typed import Typed as UmxTyped
+from ..bindings.multiref import MultiRef
+from ..xsd.query import TypeQuery, ElementQuery
+from ..xsd.sxbasic import Element as SchemaElement
+from ..options import Options
+from ..plugin import PluginContainer
+
 
 log = getLogger(__name__)
 

@@ -18,12 +18,12 @@
 The I{wsse} module provides WS-Security.
 """
 
-from logging import getLogger
-from et_suds import *
-from et_suds.sudsobject import Object
-from et_suds.sax.element import Element
-from et_suds.sax.date import UTC
 from datetime import datetime, timedelta
+
+from .sudsobject import Object
+from .sax.element import Element
+from .sax.date import UTC
+
 
 try:
     from hashlib import md5

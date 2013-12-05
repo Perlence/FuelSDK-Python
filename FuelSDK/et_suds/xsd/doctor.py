@@ -20,9 +20,9 @@ schema(s).
 """
 
 from logging import getLogger
-from et_suds.sax import splitPrefix, Namespace
-from et_suds.sax.element import Element
-from et_suds.plugin import DocumentPlugin, DocumentContext
+from ..sax import Namespace
+from ..sax.element import Element
+from ..plugin import DocumentPlugin, DocumentContext
 
 log = getLogger(__name__)
 

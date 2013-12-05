@@ -19,9 +19,8 @@ The I{service definition} provides a textual representation of a service.
 """
 
 from logging import getLogger
-from et_suds import *
-import et_suds.metrics as metrics
-from et_suds.sax import Namespace
+from . import metrics, tostr
+from .sax import Namespace
 
 log = getLogger(__name__)
 

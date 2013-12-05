@@ -18,12 +18,13 @@
 Contains xml document reader classes.
 """
 
-from et_suds.sax.parser import Parser
-from et_suds.transport import Request
-from et_suds.cache import Cache, NoCache
-from et_suds.store import DocumentStore
-from et_suds.plugin import PluginContainer
 from logging import getLogger
+
+from .sax.parser import Parser
+from .transport import Request
+from .cache import Cache, NoCache
+from .store import DocumentStore
+from .plugin import PluginContainer
 
 
 log = getLogger(__name__)

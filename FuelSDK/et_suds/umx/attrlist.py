@@ -18,9 +18,7 @@
 Provides filtered attribute list classes.
 """
 
-from et_suds import *
-from et_suds.umx import *
-from et_suds.sax import Namespace
+from ..sax import Namespace
 
 
 class AttrList:

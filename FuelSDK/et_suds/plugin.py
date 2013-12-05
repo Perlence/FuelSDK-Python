@@ -19,7 +19,6 @@ The plugin module provides classes for implementation
 of et_suds plugins.
 """
 
-from et_suds import *
 from logging import getLogger
 
 log = getLogger(__name__)

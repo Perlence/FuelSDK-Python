@@ -19,12 +19,12 @@ Provides encoded I{marshaller} classes.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.mx import *
-from et_suds.mx.literal import Literal
-from et_suds.mx.typer import Typer
-from et_suds.sudsobject import Factory, Object
-from et_suds.xsd.query import TypeQuery
+from .. import TypeNotFound
+from . import *
+from .literal import Literal
+from .typer import Typer
+from ..sudsobject import Factory, Object
+from ..xsd.query import TypeQuery
 
 log = getLogger(__name__)
 

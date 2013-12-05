@@ -19,12 +19,10 @@ Provides I{marshaller} core classes.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.mx import *
-from et_suds.mx.appender import ContentAppender
-from et_suds.sax.element import Element
-from et_suds.sax.document import Document
-from et_suds.sudsobject import Property
+from .appender import ContentAppender
+from ..sax.element import Element
+from ..sax.document import Document
+from ..sudsobject import Property
 
 
 log = getLogger(__name__)

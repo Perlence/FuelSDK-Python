@@ -20,11 +20,12 @@ between XML dates and python objects.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.xsd import *
 import time
 import datetime as dt
 import re
+
+from ..xsd import *
+
 
 log = getLogger(__name__)
 

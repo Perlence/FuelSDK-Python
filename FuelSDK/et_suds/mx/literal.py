@@ -19,13 +19,13 @@ Provides literal I{marshaller} classes.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.mx import *
-from et_suds.mx.core import Core
-from et_suds.mx.typer import Typer
-from et_suds.resolver import GraphResolver, Frame
-from et_suds.sax.element import Element
-from et_suds.sudsobject import Factory
+from .. import *
+from . import *
+from .core import Core
+from .typer import Typer
+from ..resolver import GraphResolver, Frame
+from ..sax.element import Element
+from ..sudsobject import Factory
 
 log = getLogger(__name__)
 

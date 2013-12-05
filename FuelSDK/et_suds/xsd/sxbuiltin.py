@@ -20,11 +20,10 @@ XSD I{builtin} schema objects.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.xsd import *
-from et_suds.sax.date import *
-from et_suds.xsd.sxbase import XBuiltin
 import datetime as dt
+
+from ..sax.date import *
+from .sxbase import XBuiltin
 
 
 log = getLogger(__name__)

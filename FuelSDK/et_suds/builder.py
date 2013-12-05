@@ -19,8 +19,8 @@ The I{builder} module provides an wsdl/xsd defined types factory
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.sudsobject import Factory
+from . import *
+from .sudsobject import Factory
 
 log = getLogger(__name__)
 

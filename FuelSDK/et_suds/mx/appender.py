@@ -19,13 +19,12 @@ Provides appender classes for I{marshalling}.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.mx import *
-from et_suds.sudsobject import footprint
-from et_suds.sudsobject import Object, Property
-from et_suds.sax.element import Element
-from et_suds.sax.text import Text
-from copy import deepcopy
+from .. import tostr, null
+from . import *
+from ..sudsobject import footprint
+from ..sudsobject import Object, Property
+from ..sax.element import Element
+from ..sax.text import Text
 
 log = getLogger(__name__)
 

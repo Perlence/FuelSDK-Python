@@ -19,11 +19,12 @@ Provides XML I{element} classes.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.sax import *
-from et_suds.sax.text import Text
-from et_suds.sax.attribute import Attribute
 import sys
+
+from . import *
+from .text import Text
+from .attribute import Attribute
+
 
 if sys.version_info < (2, 4, 0):
     from sets import Set as set

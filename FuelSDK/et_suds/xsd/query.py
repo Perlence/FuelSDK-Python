@@ -19,10 +19,10 @@ The I{query} module defines a class for performing schema queries.
 """
 
 from logging import getLogger
-from et_suds import *
-from et_suds.sudsobject import *
-from et_suds.xsd import qualify, isqref
-from et_suds.xsd.sxbuiltin import Factory
+from .. import *
+from ..sudsobject import *
+from . import isqref
+from .sxbuiltin import Factory
 
 log = getLogger(__name__)
 
@@ -159,7 +159,7 @@ class AttrQuery(Query):
         return self.result(result)
 
     def __deepsearch(self, schema):
-        from et_suds.xsd.sxbasic import Attribute
+        from .sxbasic import Attribute
 
         result = None
         for e in schema.all:
@@ -198,7 +198,7 @@ class ElementQuery(Query):
         return self.result(result)
 
     def __deepsearch(self, schema):
-        from et_suds.xsd.sxbasic import Element
+        from .sxbasic import Element
 
         result = None
         for e in schema.all:
