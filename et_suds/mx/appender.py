@@ -29,6 +29,7 @@ from copy import deepcopy
 
 log = getLogger(__name__)
 
+
 class Matcher:
     """
     Appender matcher.
@@ -67,23 +68,23 @@ class ContentAppender:
         self.default = PrimativeAppender(marshaller)
         self.appenders = (
             (Matcher(None),
-                NoneAppender(marshaller)),
+             NoneAppender(marshaller)),
             (Matcher(null),
-                NoneAppender(marshaller)),
+             NoneAppender(marshaller)),
             (Matcher(Property),
-                PropertyAppender(marshaller)),
+             PropertyAppender(marshaller)),
             (Matcher(Object),
-                ObjectAppender(marshaller)),
+             ObjectAppender(marshaller)),
             (Matcher(Element),
-                ElementAppender(marshaller)),
+             ElementAppender(marshaller)),
             (Matcher(Text),
-                TextAppender(marshaller)),
+             TextAppender(marshaller)),
             (Matcher(list),
-                ListAppender(marshaller)),
+             ListAppender(marshaller)),
             (Matcher(tuple),
-                ListAppender(marshaller)),
+             ListAppender(marshaller)),
             (Matcher(dict),
-                DictAppender(marshaller)),
+             DictAppender(marshaller)),
         )
 
     def append(self, parent, content):
@@ -114,7 +115,7 @@ class Appender:
         @param marshaller: A marshaller.
         @type marshaller: L{et_suds.mx.core.Core}
         """
-        self.marshaller  = marshaller
+        self.marshaller = marshaller
 
     def node(self, content):
         """
@@ -221,7 +222,7 @@ class PropertyAppender(Appender):
         p = content.value
         child = self.node(content)
         child_value = p.get()
-        if(child_value is None):
+        if (child_value is None):
             pass
         else:
             child.setText(child_value)

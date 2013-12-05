@@ -210,12 +210,13 @@ class PathResolver(Resolver):
             m = self.splitp.match(s, b)
             if m is None:
                 break
-            b,e = m.span()
+            b, e = m.span()
             parts.append(s[b:e])
-            b = e+1
+            b = e + 1
         return parts
 
-    class BadPath(Exception): pass
+    class BadPath(Exception):
+        pass
 
 
 class TreeResolver(Resolver):
@@ -355,7 +356,7 @@ class NodeResolver(TreeResolver):
         @return: The found schema I{type}
         @rtype: L{xsd.sxbase.SchemaObject}
         """
-        name = '@%s'%name
+        name = '@%s' % name
         parent = self.top().resolved
         if parent is None:
             result, ancestry = self.query(name, node)
@@ -476,9 +477,9 @@ class Frame:
 
     def __str__(self):
         return '%s\n%s\n%s' % \
-            (Repr(self.type),
-            Repr(self.resolved),
-            [Repr(t) for t in self.ancestry])
+               (Repr(self.type),
+                Repr(self.resolved),
+                [Repr(t) for t in self.ancestry])
 
     class Empty:
         def __getattr__(self, name):

@@ -225,9 +225,9 @@ class Definitions(WObject):
     def add_methods(self, service):
         """ Build method view for service """
         bindings = {
-            'document/literal' : Document(self),
-            'rpc/literal' : RPC(self),
-            'rpc/encoded' : Encoded(self)
+            'document/literal': Document(self),
+            'rpc/literal': RPC(self),
+            'rpc/encoded': Encoded(self)
         }
         for p in service.ports:
             binding = p.binding
@@ -558,7 +558,7 @@ class Binding(NamedObject):
     def soaproot(self):
         """ get the soap:binding """
         for ns in (soapns, soap12ns):
-            sr =  self.root.getChild('binding', ns=ns)
+            sr = self.root.getChild('binding', ns=ns)
             if sr is not None:
                 return sr
         return None
@@ -894,15 +894,15 @@ class Factory:
     @type tags: dict
     """
 
-    tags =\
-    {
-        'import' : Import,
-        'types' : Types,
-        'message' : Message,
-        'portType' : PortType,
-        'binding' : Binding,
-        'service' : Service,
-    }
+    tags = \
+        {
+            'import': Import,
+            'types': Types,
+            'message': Message,
+            'portType': PortType,
+            'binding': Binding,
+            'service': Service,
+        }
 
     @classmethod
     def create(cls, root, definitions):

@@ -31,7 +31,6 @@ except ImportError:
     # Python 2.4 compatibility
     from md5 import md5
 
-
 dsns = \
     ('ds',
      'http://www.w3.org/2000/09/xmldsig#')
@@ -98,7 +97,7 @@ class Token(Object):
         return str(utc)
 
     def __init__(self):
-            Object.__init__(self)
+        Object.__init__(self)
 
 
 class UsernameToken(Token):

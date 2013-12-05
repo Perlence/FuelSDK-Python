@@ -45,7 +45,7 @@ class Encoded(Typed):
         #
         self.setaty(content)
         Typed.start(self, content)
-    
+
     def end(self, content):
         #
         # Squash soap encoded arrays into python lists.  This is
@@ -56,7 +56,7 @@ class Encoded(Typed):
         if aty is not None:
             self.promote(content)
         return Typed.end(self, content)
-    
+
     def postprocess(self, content):
         #
         # Ensure proper rendering of empty arrays.
@@ -65,7 +65,7 @@ class Encoded(Typed):
             return Typed.postprocess(self, content)
         else:
             return content.data
-    
+
     def setaty(self, content):
         """
         Grab the (aty) soap-enc:arrayType and attach it to the
@@ -87,7 +87,7 @@ class Encoded(Typed):
             else:
                 pass # (2) dimensional array
         return self
-    
+
     def applyaty(self, content, xty):
         """
         Apply the type referenced in the I{arrayType} to the content
@@ -121,7 +121,7 @@ class Encoded(Typed):
         @param content: An array content.
         @type content: L{Content}
         """
-        for n,v in content.data:
+        for n, v in content.data:
             if isinstance(v, list):
                 content.data = v
                 return

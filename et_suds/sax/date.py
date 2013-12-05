@@ -40,6 +40,7 @@ class Date:
     @ivar date: The object value.
     @type date: B{datetime}.I{date}
     """
+
     def __init__(self, date):
         """
         @param date: The value of the object.
@@ -53,7 +54,7 @@ class Date:
             self.date = self.__parse(date)
             return
         raise ValueError, type(date)
-    
+
     def year(self):
         """
         Get the I{year} component.
@@ -61,7 +62,7 @@ class Date:
         @rtype: int
         """
         return self.date.year
-    
+
     def month(self):
         """
         Get the I{month} component.
@@ -69,7 +70,7 @@ class Date:
         @rtype: int
         """
         return self.date.month
-    
+
     def day(self):
         """
         Get the I{day} component.
@@ -77,7 +78,7 @@ class Date:
         @rtype: int
         """
         return self.date.day
-        
+
     def __parse(self, s):
         """
         Parse the string date.
@@ -102,10 +103,10 @@ class Date:
         except:
             log.debug(s, exec_info=True)
             raise ValueError, 'Invalid format "%s"' % s
-        
+
     def __str__(self):
         return unicode(self)
-    
+
     def __unicode__(self):
         return self.date.isoformat()
 
@@ -125,7 +126,7 @@ class Time:
     @ivar date: The object value.
     @type date: B{datetime}.I{time}
     """
-    
+
     def __init__(self, time, adjusted=True):
         """
         @param time: The value of the object.
@@ -144,7 +145,7 @@ class Time:
                 self.__adjust()
             return
         raise ValueError, type(time)
-    
+
     def hour(self):
         """
         Get the I{hour} component.
@@ -152,7 +153,7 @@ class Time:
         @rtype: int
         """
         return self.time.hour
-    
+
     def minute(self):
         """
         Get the I{minute} component.
@@ -160,7 +161,7 @@ class Time:
         @rtype: int
         """
         return self.time.minute
-    
+
     def second(self):
         """
         Get the I{seconds} component.
@@ -168,7 +169,7 @@ class Time:
         @rtype: int
         """
         return self.time.second
-    
+
     def microsecond(self):
         """
         Get the I{microsecond} component.
@@ -176,7 +177,7 @@ class Time:
         @rtype: int
         """
         return self.time.microsecond
-    
+
     def __adjust(self):
         """
         Adjust for TZ offset.
@@ -187,7 +188,7 @@ class Time:
             d = dt.datetime.combine(today, self.time)
             d = ( d + delta )
             self.time = d.time()
-        
+
     def __parse(self, s):
         """
         Parse the string date.
@@ -219,7 +220,7 @@ class Time:
         except:
             log.debug(s, exec_info=True)
             raise ValueError, 'Invalid format "%s"' % s
-        
+
     def __second(self, s):
         """
         Parse the seconds and microseconds.
@@ -235,7 +236,7 @@ class Time:
             return (int(part[0]), int(part[1][:6]))
         else:
             return (int(part[0]), None)
-        
+
     def __offset(self, s):
         """
         Parse the TZ offset.
@@ -254,7 +255,7 @@ class Time:
 
     def __str__(self):
         return unicode(self)
-    
+
     def __unicode__(self):
         time = self.time.isoformat()
         if self.tz.local:
@@ -263,7 +264,7 @@ class Time:
             return '%sZ' % time
 
 
-class DateTime(Date,Time):
+class DateTime(Date, Time):
     """
     An XML time object.
     Supported formats:
@@ -276,6 +277,7 @@ class DateTime(Date,Time):
     @ivar datetime: The object value.
     @type datetime: B{datetime}.I{datedate}
     """
+
     def __init__(self, date):
         """
         @param date: The value of the object.
@@ -297,7 +299,7 @@ class DateTime(Date,Time):
             self.__adjust()
             return
         raise ValueError, type(date)
-    
+
     def __adjust(self):
         """
         Adjust for TZ offset.
@@ -315,26 +317,26 @@ class DateTime(Date,Time):
 
     def __str__(self):
         return unicode(self)
-    
+
     def __unicode__(self):
         s = []
         s.append(Date.__unicode__(self))
         s.append(Time.__unicode__(self))
         return 'T'.join(s)
-    
-    
+
+
 class UTC(DateTime):
     """
     Represents current UTC time.
     """
-    
+
     def __init__(self, date=None):
         if date is None:
             date = dt.datetime.utcnow()
         DateTime.__init__(self, date)
         self.tz.local = 0
-    
-    
+
+
 class Timezone:
     """
     Timezone object used to do TZ conversions
@@ -343,16 +345,16 @@ class Timezone:
     @cvar patten: The regex patten to match TZ.
     @type patten: re.Pattern
     """
-    
+
     pattern = re.compile('([zZ])|([\-\+][0-9]{2}:[0-9]{2})')
-    
-    LOCAL = ( 0-time.timezone/60/60 )
+
+    LOCAL = ( 0 - time.timezone / 60 / 60 )
 
     def __init__(self, offset=None):
         if offset is None:
             offset = self.LOCAL
         self.local = offset
-    
+
     @classmethod
     def split(cls, s):
         """

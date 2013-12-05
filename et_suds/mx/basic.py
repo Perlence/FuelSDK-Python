@@ -30,7 +30,7 @@ class Basic(Core):
     """
     A I{basic} (untyped) marshaller.
     """
-    
+
     def process(self, value, tag=None):
         """
         Process (marshal) the tag with the specified value using the

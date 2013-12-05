@@ -41,7 +41,6 @@ Content.extensions.append('real')
 Content.extensions.append('ancestry')
 
 
-
 class Typed(Core):
     """
     A I{typed} marshaller.
@@ -81,7 +80,7 @@ class Typed(Core):
         if content.type is None:
             name = content.tag
             if name.startswith('_'):
-                name = '@'+name[1:]
+                name = '@' + name[1:]
             content.type = self.resolver.find(name, content.value)
             if content.type is None:
                 raise TypeNotFound(content.tag)
@@ -211,7 +210,7 @@ class Typed(Core):
             v = content.value
             if v is None:
                 return True
-            if isinstance(v, (list,tuple)) and len(v) == 0:
+            if isinstance(v, (list, tuple)) and len(v) == 0:
                 return True
         return False
 

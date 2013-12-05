@@ -25,29 +25,30 @@ from et_suds.sax.element import Element
 
 log = getLogger(__name__)
 
+
 class Document(Element):
     """ simple document """
-    
+
     DECL = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def __init__(self, root=None):
         Element.__init__(self, 'document')
         if root is not None:
             self.append(root)
-        
+
     def root(self):
         if len(self.children):
             return self.children[0]
         else:
             return None
-        
+
     def str(self):
         s = []
         s.append(self.DECL)
         s.append('\n')
         s.append(self.root().str())
         return ''.join(s)
-    
+
     def plain(self):
         s = []
         s.append(self.DECL)
@@ -56,6 +57,6 @@ class Document(Element):
 
     def __str__(self):
         return unicode(self).encode('utf-8')
-    
+
     def __unicode__(self):
         return self.str()

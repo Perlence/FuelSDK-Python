@@ -101,7 +101,7 @@ class Typed(Core):
     def nillable(self, content):
         resolved = content.type.resolve()
         return ( content.type.nillable or \
-            (resolved.builtin() and resolved.nillable ) )
+                 (resolved.builtin() and resolved.nillable ) )
 
     def append_attribute(self, name, value, content):
         """

@@ -43,24 +43,24 @@ log = getLogger(__name__)
 
 class Handler(ContentHandler):
     """ sax hanlder """
-    
+
     def __init__(self):
         self.nodes = [Document()]
- 
+
     def startElement(self, name, attrs):
         top = self.top()
         node = Element(unicode(name), parent=top)
         for a in attrs.getNames():
             n = unicode(a)
             v = unicode(attrs.getValue(a))
-            attribute = Attribute(n,v)
+            attribute = Attribute(n, v)
             if self.mapPrefix(node, attribute):
                 continue
             node.append(attribute)
         node.charbuffer = []
         top.append(node)
         self.push(node)
-        
+
     def mapPrefix(self, node, attribute):
         skip = False
         if attribute.name == 'xmlns':
@@ -72,7 +72,7 @@ class Handler(ContentHandler):
             node.nsprefixes[prefix] = unicode(attribute.value)
             skip = True
         return skip
- 
+
     def endElement(self, name):
         name = unicode(name)
         current = self.top()
@@ -86,7 +86,7 @@ class Handler(ContentHandler):
             self.pop()
         else:
             raise Exception('malformed document')
- 
+
     def characters(self, content):
         text = unicode(content)
         node = self.top()
@@ -98,14 +98,14 @@ class Handler(ContentHandler):
 
     def pop(self):
         return self.nodes.pop()
- 
+
     def top(self):
-        return self.nodes[len(self.nodes)-1]
+        return self.nodes[len(self.nodes) - 1]
 
 
 class Parser:
     """ SAX Parser """
-    
+
     @classmethod
     def saxparser(cls):
         p = make_parser()
@@ -113,7 +113,7 @@ class Parser:
         h = Handler()
         p.setContentHandler(h)
         return (p, h)
-        
+
     def parse(self, file=None, string=None):
         """
         SAX parse XML text.

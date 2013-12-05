@@ -49,7 +49,7 @@ class Encoded(Literal):
         # containing values that are 'typed' et_suds objects.
         #
         start = Literal.start(self, content)
-        if start and isinstance(content.value, (list,tuple)):
+        if start and isinstance(content.value, (list, tuple)):
             resolved = content.type.resolve()
             for c in resolved:
                 if hasattr(c[0], 'aty'):

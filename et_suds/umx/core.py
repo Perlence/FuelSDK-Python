@@ -28,7 +28,8 @@ from et_suds.sudsobject import Factory, merge
 
 log = getLogger(__name__)
 
-reserved = { 'class':'cls', 'def':'dfn', }
+reserved = {'class': 'cls', 'def': 'dfn', }
+
 
 class Core:
     """
@@ -83,10 +84,10 @@ class Core:
             return node
         attributes = AttrList(node.attributes)
         if attributes.rlen() and \
-            not len(node.children) and \
-            node.hasText():
-                p = Factory.property(node.name, node.getText())
-                return merge(content.data, p)
+                not len(node.children) and \
+                node.hasText():
+            p = Factory.property(node.name, node.getText())
+            return merge(content.data, p)
         if len(content.data):
             return content.data
         lang = attributes.lang()
@@ -150,7 +151,7 @@ class Core:
                 if cval is None:
                     setattr(content.data, key, [])
                 else:
-                    setattr(content.data, key, [cval,])
+                    setattr(content.data, key, [cval, ])
             else:
                 setattr(content.data, key, cval)
 

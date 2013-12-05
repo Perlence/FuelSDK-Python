@@ -27,24 +27,24 @@ from et_suds.sax.element import Element
 
 log = getLogger(__name__)
 
-
 encns = ('SOAP-ENC', 'http://schemas.xmlsoap.org/soap/encoding/')
+
 
 class RPC(Binding):
     """
     RPC/Literal binding style.
     """
-    
+
     def param_defs(self, method):
         return self.bodypart_types(method)
-        
+
     def envelope(self, header, body):
         env = Binding.envelope(self, header, body)
         env.addPrefix(encns[0], encns[1])
-        env.set('%s:encodingStyle' % envns[0], 
+        env.set('%s:encodingStyle' % envns[0],
                 'http://schemas.xmlsoap.org/soap/encoding/')
         return env
-        
+
     def bodycontent(self, method, args, kwargs):
         n = 0
         root = self.method(method)
@@ -58,10 +58,10 @@ class RPC(Binding):
                 root.append(p)
             n += 1
         return root
-    
+
     def replycontent(self, method, body):
         return body[0].children
-        
+
     def method(self, method):
         """
         Get the document root.  For I{rpc/(literal|encoded)}, this is the
@@ -76,7 +76,7 @@ class RPC(Binding):
             ns = ('ns0', ns[1])
         method = Element(method.name, ns=ns)
         return method
-    
+
 
 class Encoded(RPC):
     """

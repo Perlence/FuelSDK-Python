@@ -26,6 +26,7 @@ from et_suds.sax.text import Text
 
 log = getLogger(__name__)
 
+
 class Attribute:
     """
     An XML attribute object.
@@ -38,6 +39,7 @@ class Attribute:
     @ivar value: The attribute's value
     @type value: basestring
     """
+
     def __init__(self, name, value=None):
         """
         @param name: The attribute's name with I{optional} namespace prefix.
@@ -48,7 +50,7 @@ class Attribute:
         self.parent = None
         self.prefix, self.name = splitPrefix(name)
         self.setValue(value)
-        
+
     def clone(self, parent=None):
         """
         Clone this object.
@@ -60,7 +62,7 @@ class Attribute:
         a = Attribute(self.qname(), self.value)
         a.parent = parent
         return a
-    
+
     def qname(self):
         """
         Get the B{fully} qualified name of this attribute
@@ -71,7 +73,7 @@ class Attribute:
             return self.name
         else:
             return ':'.join((self.prefix, self.name))
-        
+
     def setValue(self, value):
         """
         Set the attributes value
@@ -85,7 +87,7 @@ class Attribute:
         else:
             self.value = Text(value)
         return self
-        
+
     def getValue(self, default=Text('')):
         """
         Get the attributes value with optional default.
@@ -99,7 +101,7 @@ class Attribute:
             return self.value
         else:
             return default
-    
+
     def hasText(self):
         """
         Get whether the attribute has I{text} and that it is not an empty
@@ -108,7 +110,7 @@ class Attribute:
         @rtype: boolean
         """
         return ( self.value is not None and len(self.value) )
-        
+
     def namespace(self):
         """
         Get the attributes namespace.  This may either be the namespace
@@ -120,7 +122,7 @@ class Attribute:
             return Namespace.default
         else:
             return self.resolvePrefix(self.prefix)
-        
+
     def resolvePrefix(self, prefix):
         """
         Resolve the specified prefix to a known namespace.
@@ -133,7 +135,7 @@ class Attribute:
         if self.parent is not None:
             ns = self.parent.resolvePrefix(prefix)
         return ns
-    
+
     def match(self, name=None, ns=None):
         """
         Match by (optional) name and/or (optional) namespace.
@@ -153,24 +155,24 @@ class Attribute:
         else:
             byns = ( self.namespace()[1] == ns[1] )
         return ( byname and byns )
-    
+
     def __eq__(self, rhs):
         """ equals operator """
         return rhs is not None and \
-            isinstance(rhs, Attribute) and \
-            self.prefix == rhs.name and \
-            self.name == rhs.name
-            
+               isinstance(rhs, Attribute) and \
+               self.prefix == rhs.name and \
+               self.name == rhs.name
+
     def __repr__(self):
         """ get a string representation """
         return \
-            'attr (prefix=%s, name=%s, value=(%s))' %\
-                (self.prefix, self.name, self.value)
+            'attr (prefix=%s, name=%s, value=(%s))' % \
+            (self.prefix, self.name, self.value)
 
     def __str__(self):
         """ get an xml string representation """
         return unicode(self).encode('utf-8')
-    
+
     def __unicode__(self):
         """ get an xml string representation """
         n = self.qname()

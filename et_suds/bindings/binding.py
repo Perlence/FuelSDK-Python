@@ -55,7 +55,7 @@ class Binding:
     @type options: L{Options}
     """
 
-    replyfilter = (lambda s,r: r)
+    replyfilter = (lambda s, r: r)
 
     def __init__(self, wsdl):
         """
@@ -238,7 +238,7 @@ class Binding:
                     setattr(composite, tag, sobject)
             else:
                 if not isinstance(value, list):
-                    value = [value,]
+                    value = [value, ]
                     setattr(composite, tag, value)
                 value.append(sobject)
         return composite
@@ -364,12 +364,12 @@ class Binding:
         if wsse is not None:
             content.append(wsse.xml())
         headers = self.options().soapheaders
-        if not isinstance(headers, (tuple,list,dict)):
+        if not isinstance(headers, (tuple, list, dict)):
             headers = (headers,)
         if len(headers) == 0:
             return content
         pts = self.headpart_types(method)
-        if isinstance(headers, (tuple,list)):
+        if isinstance(headers, (tuple, list)):
             for header in headers:
                 if isinstance(header, Element):
                     content.append(deepcopy(header))

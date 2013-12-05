@@ -31,6 +31,7 @@ class Doctor:
     """
     Schema Doctor.
     """
+
     def examine(self, root):
         """
         Examine and repair the schema (if necessary).
@@ -46,10 +47,10 @@ class Practice(Doctor):
     @ivar doctors: A list of doctors.
     @type doctors: list
     """
-    
+
     def __init__(self):
         self.doctors = []
-        
+
     def add(self, doctor):
         """
         Add a doctor to the practice
@@ -78,7 +79,7 @@ class TnsFilter:
         """
         self.tns = []
         self.add(*tns)
-        
+
     def add(self, *tns):
         """
         Add I{targetNamesapces} to be added.
@@ -102,7 +103,7 @@ class TnsFilter:
             matched = 1
         itself = ( ns == tns )
         return ( matched and not itself )
-    
+
 
 class Import:
     """
@@ -119,7 +120,7 @@ class Import:
     """
 
     xsdns = Namespace.xsdns
-    
+
     def __init__(self, ns, location=None):
         """
         @param ns: An import namespace.
@@ -130,7 +131,7 @@ class Import:
         self.ns = ns
         self.location = location
         self.filter = TnsFilter()
-        
+
     def setfilter(self, filter):
         """
         Set the filter.
@@ -138,7 +139,7 @@ class Import:
         @type filter: L{TnsFilter}
         """
         self.filter = filter
-        
+
     def apply(self, root):
         """
         Apply the import (rule) to the specified schema.
@@ -157,7 +158,7 @@ class Import:
             node.set('schemaLocation', self.location)
         log.debug('inserting: %s', node)
         root.insert(node)
-        
+
     def add(self, root):
         """
         Add an <xs:import/> to the specified schema root.
@@ -169,8 +170,8 @@ class Import:
         if self.location is not None:
             node.set('schemaLocation', self.location)
         log.debug('%s inserted', node)
-        root.insert(node) 
-        
+        root.insert(node)
+
     def exists(self, root):
         """
         Check to see if the <xs:import/> already exists
@@ -185,7 +186,7 @@ class Import:
             if self.ns == ns:
                 return 1
         return 0
-    
+
 
 class ImportDoctor(Doctor, DocumentPlugin):
     """
@@ -199,7 +200,7 @@ class ImportDoctor(Doctor, DocumentPlugin):
         """
         self.imports = []
         self.add(*imports)
-        
+
     def add(self, *imports):
         """
         Add a namesapce to be checked.
@@ -207,7 +208,7 @@ class ImportDoctor(Doctor, DocumentPlugin):
         @type imports: [L{Import},..]
         """
         self.imports += imports
-        
+
     def examine(self, node):
         for imp in self.imports:
             imp.apply(node)
@@ -218,7 +219,7 @@ class ImportDoctor(Doctor, DocumentPlugin):
         if node.name == 'schema' and Namespace.xsd(node.namespace()):
             self.examine(node)
             return
-        # look deeper
+            # look deeper
         context = DocumentContext()
         for child in node:
             context.document = child

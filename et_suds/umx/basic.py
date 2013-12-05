@@ -28,7 +28,7 @@ class Basic(Core):
     """
     A object builder (unmarshaller).
     """
-        
+
     def process(self, node):
         """
         Process an object graph representation of the xml I{node}.

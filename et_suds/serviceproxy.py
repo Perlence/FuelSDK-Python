@@ -28,7 +28,6 @@ log = getLogger(__name__)
 
 
 class ServiceProxy(object):
-
     """
     A lightweight soap based web service proxy.
     @ivar __client__: A client.
@@ -79,7 +78,7 @@ class ServiceProxy(object):
         return unicode(self.__client__)
 
     def __getattr__(self, name):
-        builtin =  name.startswith('__') and name.endswith('__')
+        builtin = name.startswith('__') and name.endswith('__')
         if builtin:
             return self.__dict__[name]
         else:

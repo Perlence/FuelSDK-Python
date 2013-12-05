@@ -18,7 +18,6 @@
 Contains xml document reader classes.
 """
 
-
 from et_suds.sax.parser import Parser
 from et_suds.transport import Request
 from et_suds.cache import Cache, NoCache
@@ -59,7 +58,7 @@ class DocumentReader(Reader):
     The XML document reader provides an integration
     between the SAX L{Parser} and the document cache.
     """
-    
+
     def open(self, url):
         """
         Open an XML document at the specified I{url}.
@@ -80,7 +79,7 @@ class DocumentReader(Reader):
             cache.put(id, d)
         self.plugins.document.parsed(url=url, document=d.root())
         return d
-    
+
     def download(self, url):
         """
         Download the docuemnt.
@@ -96,10 +95,10 @@ class DocumentReader(Reader):
         content = fp.read()
         fp.close()
         ctx = self.plugins.document.loaded(url=url, document=content)
-        content = ctx.document 
+        content = ctx.document
         sax = Parser()
         return sax.parse(string=content)
-    
+
     def cache(self):
         """
         Get the cache.
@@ -120,7 +119,7 @@ class DefinitionsReader(Reader):
         create the object not found in the cache.
     @type fn: I{Constructor}
     """
-    
+
     def __init__(self, options, fn):
         """
         @param options: An options object.
@@ -131,7 +130,7 @@ class DefinitionsReader(Reader):
         """
         Reader.__init__(self, options)
         self.fn = fn
-    
+
     def open(self, url):
         """
         Open a WSDL at the specified I{url}.

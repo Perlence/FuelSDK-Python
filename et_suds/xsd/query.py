@@ -160,6 +160,7 @@ class AttrQuery(Query):
 
     def __deepsearch(self, schema):
         from et_suds.xsd.sxbasic import Attribute
+
         result = None
         for e in schema.all:
             result = e.find(self.ref, (Attribute,))
@@ -198,6 +199,7 @@ class ElementQuery(Query):
 
     def __deepsearch(self, schema):
         from et_suds.xsd.sxbasic import Element
+
         result = None
         for e in schema.all:
             result = e.find(self.ref, (Element,))

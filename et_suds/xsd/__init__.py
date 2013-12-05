@@ -58,6 +58,7 @@ def qualify(ref, resolvers, defns=Namespace.default):
         ns = defns
     return (n, ns[1])
 
+
 def isqref(object):
     """
     Get whether the object is a I{qualified reference}.
@@ -66,7 +67,7 @@ def isqref(object):
     @rtype: boolean
     @see: L{qualify}
     """
-    return (\
+    return ( \
         isinstance(object, tuple) and \
         len(object) == 2 and \
         isinstance(object[0], basestring) and \
@@ -77,6 +78,7 @@ class Filter:
     def __init__(self, inclusive=False, *items):
         self.inclusive = inclusive
         self.items = items
+
     def __contains__(self, x):
         if self.inclusive:
             result = ( x in self.items )

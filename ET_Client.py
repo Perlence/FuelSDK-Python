@@ -1,13 +1,14 @@
+import json
+import logging
+import os
+import time
+
 import requests
+
 import et_suds.client
 import et_suds.wsse
 from et_suds.sax.element import Element
-import logging
-import os
-import ConfigParser
-import time
-import json
-import traceback
+
 import jwt
 
 ########
@@ -31,11 +32,11 @@ class ET_Client(object):
 
     ## get_server_wsdl - if True and a newer WSDL is on the server than the local filesystem retrieve it
     def __init__(self, client_id, client_secret, appsignature='none',
-                 wsdl_server_url = 'https://webservice.exacttarget.com/etframework.wsdl',
-                 get_server_wsdl = False, debug = False, params = None):
+                 wsdl_server_url='https://webservice.exacttarget.com/etframework.wsdl',
+                 get_server_wsdl=False, debug=False, params=None):
 
         self.debug = debug
-        if(debug):
+        if debug:
             logging.getLogger('et_suds.client').setLevel(logging.DEBUG)
             logging.getLogger('et_suds.transport').setLevel(logging.DEBUG)
             logging.getLogger('et_suds.xsd.schema').setLevel(logging.DEBUG)
@@ -54,13 +55,13 @@ class ET_Client(object):
         self.wsdl_file_url = self.load_wsdl(wsdl_server_url, get_server_wsdl)
 
         ## get the JWT from the params if passed in...or go to the server to get it
-        if(params is not None and 'jwt' in params):
+        if (params is not None and 'jwt' in params):
             decodedJWT = jwt.decode(params['jwt'], self.appsignature)
             self.authToken = decodedJWT['request']['user']['oauthToken']
             self.authTokenExpiration = time.time() + decodedJWT['request']['user']['expiresIn']
             self.internalAuthToken = decodedJWT['request']['user']['internalOauthToken']
             if 'refreshToken' in decodedJWT:
-                self.refreshKey = tokenResponse['request']['user']['refreshToken']
+                self.refreshKey = decodedJWT['request']['user']['refreshToken']
             self.build_soap_client()
         else:
             self.refresh_token()
@@ -69,7 +70,7 @@ class ET_Client(object):
     ## retrieve the url of the ExactTarget wsdl...either file: or http:
     ## depending on if it already exists locally or server flag is set and
     ## server has a newer copy
-    def load_wsdl(self, wsdl_url, get_server_wsdl = False):
+    def load_wsdl(self, wsdl_url, get_server_wsdl=False):
         path = os.path.dirname(os.path.abspath(__file__))
         file_location = os.path.join(path, 'ExactTargetWSDL.xml')
         file_url = 'file:///' + file_location
@@ -96,8 +97,10 @@ class ET_Client(object):
         if self.endpoint is None:
             self.endpoint = self.determineStack()
 
-        self.authObj = {'oAuth' : {'oAuthToken' : self.internalAuthToken}}
-        self.authObj['attributes'] = { 'oAuth' : { 'xmlns' : 'http://exacttarget.com' }}
+        self.authObj = {
+            'oAuth': {'oAuthToken': self.internalAuthToken},
+            'attributes': {'oAuth': {'xmlns': 'http://exacttarget.com'}}
+        }
 
         self.soap_client = et_suds.client.Client(self.wsdl_file_url, faults=False, cachingpolicy=1)
         self.soap_client.set_options(location=self.endpoint)
@@ -113,22 +116,26 @@ class ET_Client(object):
         self.soap_client.set_options(wsse=security)
 
     ## Called from many different places right before executing a SOAP call
-    def refresh_token(self, force_refresh = False):
+    def refresh_token(self, force_refresh=False):
         #If we don't already have a token or the token expires within 5 min(300 seconds), get one
-        if (force_refresh or self.authToken is None or (self.authTokenExpiration is not None and time.time() + 300 > self.authTokenExpiration)):
-            headers = {'content-type' : 'application/json'}
-            if (self.authToken is None):
-                payload = {'clientId' : self.client_id, 'clientSecret' : self.client_secret, 'accessType': 'offline'}
+        if (force_refresh or self.authToken is None or (
+                self.authTokenExpiration is not None and time.time() + 300 > self.authTokenExpiration)):
+            headers = {'content-type': 'application/json'}
+            if self.authToken is None:
+                payload = {'clientId': self.client_id, 'clientSecret': self.client_secret, 'accessType': 'offline'}
             else:
-                payload = {'clientId' : self.client_id, 'clientSecret' : self.client_secret, 'refreshToken' : self.refreshKey, 'accessType': 'offline', 'scope':'cas:'+ self.internalAuthToken}
+                payload = {'clientId': self.client_id, 'clientSecret': self.client_secret,
+                           'refreshToken': self.refreshKey, 'accessType': 'offline',
+                           'scope': 'cas:' + self.internalAuthToken}
             if self.refreshKey:
                 payload['refreshToken'] = self.refreshKey
 
-            r = requests.post('https://auth.exacttargetapis.com/v1/requestToken?legacy=1', data=json.dumps(payload), headers=headers)
-            tokenResponse = r.json
+            r = requests.post('https://auth.exacttargetapis.com/v1/requestToken?legacy=1', data=json.dumps(payload),
+                              headers=headers)
+            tokenResponse = r.json()
 
             if 'accessToken' not in tokenResponse:
-                raise Exception('Unable to validate App Keys(ClientID/ClientSecret) provided: ' + repr(r.json))
+                raise Exception('Unable to validate App Keys(ClientID/ClientSecret) provided: ' + repr(r.json()))
 
             self.authToken = tokenResponse['accessToken']
             self.authTokenExpiration = time.time() + tokenResponse['expiresIn']
@@ -141,26 +148,27 @@ class ET_Client(object):
     ##find the correct url that data request web calls should go against for the token we have.
     def determineStack(self):
         try:
-            r = requests.get('https://www.exacttargetapis.com/platform/v1/endpoints/soap?access_token=' + self.authToken)
-            contextResponse = r.json
-            if('url' in contextResponse):
+            r = requests.get(
+                'https://www.exacttargetapis.com/platform/v1/endpoints/soap?access_token=' + self.authToken)
+            contextResponse = r.json()
+            if ('url' in contextResponse):
                 return str(contextResponse['url'])
 
         except Exception as e:
             raise Exception('Unable to determine stack using /platform/v1/tokenContext: ' + e.message)
 
     ##add or update a subscriber with a list
-    def AddSubscriberToList(self, emailAddress, listIDs, subscriberKey = None):
+    def AddSubscriberToList(self, emailAddress, listIDs, subscriberKey=None):
         newSub = ET_Subscriber()
         newSub.auth_stub = self
         lists = []
 
         for p in listIDs:
-            lists.append({"ID" : p})
+            lists.append({"ID": p})
 
-        newSub.props = {"EmailAddress" : emailAddress, "Lists" : lists}
+        newSub.props = {"EmailAddress": emailAddress, "Lists": lists}
         if subscriberKey is not None:
-            newSub.props['SubscriberKey']  = subscriberKey
+            newSub.props['SubscriberKey'] = subscriberKey
 
         # Try to add the subscriber
         postResponse = newSub.post()
@@ -197,7 +205,7 @@ class ET_Constructor(object):
     more_results = False
     request_id = None
 
-    def __init__(self, response = None, rest = False):
+    def __init__(self, response=None, rest=False):
 
         if response is not None:    #if a response was returned from the web service call
             if rest:    # result is from a REST web service call...
@@ -208,11 +216,11 @@ class ET_Constructor(object):
                     self.status = False
 
                 try:
-                    self.results = response.json
+                    self.results = response.json()
                 except:
-                    self.message = response.json
+                    self.message = response.json()
 
-                #additional parsing will happen in the child object that called in to here.
+                    #additional parsing will happen in the child object that called in to here.
 
             else:   #soap call
                 self.code = response[0] #et_suds puts the code in tuple position 0
@@ -282,7 +290,7 @@ class ET_Describe(ET_Constructor):
 
         ws_describeRequest = auth_stub.soap_client.factory.create('ArrayOfObjectDefinitionRequest')
 
-        ObjectDefinitionRequest = { 'ObjectType' : obj_type}
+        ObjectDefinitionRequest = {'ObjectType': obj_type}
         ws_describeRequest.ObjectDefinitionRequest = [ObjectDefinitionRequest]
 
         response = auth_stub.soap_client.service.Describe(ws_describeRequest)
@@ -297,7 +305,7 @@ class ET_Describe(ET_Constructor):
 ##
 ########
 class ET_Get(ET_Constructor):
-    def __init__(self, auth_stub, obj_type, props = None, search_filter = None):
+    def __init__(self, auth_stub, obj_type, props=None, search_filter=None):
         auth_stub.refresh_token()
 
         if props is None:   #if there are no properties to retrieve for the obj_type then return a Description of obj_type
@@ -354,11 +362,12 @@ class ET_Get(ET_Constructor):
 ##
 ########
 class ET_Post(ET_Constructor):
-    def __init__(self, auth_stub, obj_type, props = None):
+    def __init__(self, auth_stub, obj_type, props=None):
         auth_stub.refresh_token()
 
-        response = auth_stub.soap_client.service.Create(None, self.parse_props_into_ws_object(auth_stub, obj_type, props))
-        if(response is not None):
+        response = auth_stub.soap_client.service.Create(None,
+                                                        self.parse_props_into_ws_object(auth_stub, obj_type, props))
+        if (response is not None):
             super(ET_Post, self).__init__(response)
 
 ########
@@ -367,12 +376,13 @@ class ET_Post(ET_Constructor):
 ##
 ########
 class ET_Patch(ET_Constructor):
-    def __init__(self, auth_stub, obj_type, props = None):
+    def __init__(self, auth_stub, obj_type, props=None):
         auth_stub.refresh_token()
 
-        response = auth_stub.soap_client.service.Update(None, self.parse_props_into_ws_object(auth_stub, obj_type, props))
+        response = auth_stub.soap_client.service.Update(None,
+                                                        self.parse_props_into_ws_object(auth_stub, obj_type, props))
 
-        if(response is not None):
+        if (response is not None):
             super(ET_Patch, self).__init__(response)
 
 ########
@@ -381,12 +391,13 @@ class ET_Patch(ET_Constructor):
 ##
 ########
 class ET_Delete(ET_Constructor):
-    def __init__(self, auth_stub, obj_type, props = None):
+    def __init__(self, auth_stub, obj_type, props=None):
         auth_stub.refresh_token()
 
-        response = auth_stub.soap_client.service.Delete(None, self.parse_props_into_ws_object(auth_stub, obj_type, props))
+        response = auth_stub.soap_client.service.Delete(None,
+                                                        self.parse_props_into_ws_object(auth_stub, obj_type, props))
 
-        if(response is not None):
+        if (response is not None):
             super(ET_Delete, self).__init__(response)
 
 ########
@@ -427,7 +438,7 @@ class ET_BaseObject(object):
 class ET_GetSupport(ET_BaseObject):
     obj_type = 'ET_GetSupport'   #should be overwritten by inherited class
 
-    def get(self, m_props = None, m_filter = None):
+    def get(self, m_props=None, m_filter=None):
         props = self.props
         search_filter = self.search_filter
 
@@ -462,14 +473,13 @@ class ET_GetSupport(ET_BaseObject):
 ##
 ########
 class ET_GetRest(ET_Constructor):
-    def __init__(self, auth_stub, endpoint, qs = None):
+    def __init__(self, auth_stub, endpoint, qs=None):
         auth_stub.refresh_token()
         fullendpoint = endpoint + '?access_token=' + auth_stub.authToken
         for qStringValue in qs:
-            fullendpoint += '&'+    qStringValue + '=' + str(qs[qStringValue])
+            fullendpoint += '&' + qStringValue + '=' + str(qs[qStringValue])
 
         r = requests.get(fullendpoint)
-
 
         self.more_results = False
 
@@ -485,8 +495,8 @@ class ET_PostRest(ET_Constructor):
     def __init__(self, auth_stub, endpoint, payload):
         auth_stub.refresh_token()
 
-        headers = {'content-type' : 'application/json'}
-        r = requests.post(endpoint + '?access_token=' + auth_stub.authToken , data=json.dumps(payload), headers=headers)
+        headers = {'content-type': 'application/json'}
+        r = requests.post(endpoint + '?access_token=' + auth_stub.authToken, data=json.dumps(payload), headers=headers)
 
         obj = super(ET_PostRest, self).__init__(r, True)
         return obj
@@ -500,8 +510,8 @@ class ET_PatchRest(ET_Constructor):
     def __init__(self, auth_stub, endpoint, payload):
         auth_stub.refresh_token()
 
-        headers = {'content-type' : 'application/json'}
-        r = requests.patch(endpoint + '?access_token=' + auth_stub.authToken , data=json.dumps(payload), headers=headers)
+        headers = {'content-type': 'application/json'}
+        r = requests.patch(endpoint + '?access_token=' + auth_stub.authToken, data=json.dumps(payload), headers=headers)
 
         obj = super(ET_PatchRest, self).__init__(r, True)
         return obj
@@ -526,7 +536,6 @@ class ET_DeleteRest(ET_Constructor):
 ##
 ########
 class ET_CUDSupport(ET_GetSupport):
-
     def __init__(self):
         super(ET_CUDSupport, self).__init__()
 
@@ -565,7 +574,7 @@ class ET_GetSupportRest(ET_BaseObject):
     def __init__(self):
         super
 
-    def get(self, props = None):
+    def get(self, props=None):
         if props is not None and type(props) is dict:
             self.props = props
 
@@ -740,6 +749,7 @@ class ET_Campaign(ET_CUDSupportRest):
         self.endpoint = 'https://www.exacttargetapis.com/hub/v1/campaigns/{id}' #but set it back to the url with id for other operations to continue working
         return obj
 
+
 class ET_Campaign_Asset(ET_CUDSupportRest):
     def __init__(self):
         super(ET_Campaign_Asset, self).__init__()
@@ -767,17 +777,11 @@ class ET_List(ET_CUDSupport):
         super(ET_List, self).__init__()
         self.obj_type = 'List'
 
+
 class ET_List_Subscriber(ET_GetSupport):
     def __init__(self):
         super(ET_List_Subscriber, self).__init__()
         self.obj_type = 'ListSubscriber'
-
-
-
-
-
-
-
 
 
 class ET_SentEvent(ET_GetSupport):
@@ -785,20 +789,24 @@ class ET_SentEvent(ET_GetSupport):
         super(ET_SentEvent, self).__init__()
         self.obj_type = 'SentEvent'
 
+
 class ET_OpenEvent(ET_GetSupport):
     def __init__(self):
         super(ET_OpenEvent, self).__init__()
         self.obj_type = 'OpenEvent'
+
 
 class ET_UnsubEvent(ET_GetSupport):
     def __init__(self):
         super(ET_UnsubEvent, self).__init__()
         self.obj_type = 'UnsubEvent'
 
+
 class ET_Email(ET_CUDSupport):
     def __init__(self):
         super(ET_Email, self).__init__()
         self.obj_type = 'Email'
+
 
 class ET_TriggeredSend(ET_CUDSupport):
     subscribers = None
@@ -808,7 +816,7 @@ class ET_TriggeredSend(ET_CUDSupport):
         self.obj_type = 'TriggeredSendDefinition'
 
     def send(self):
-        tscall = {"TriggeredSendDefinition" : self.props, "Subscribers" : self.subscribers}
+        tscall = {"TriggeredSendDefinition": self.props, "Subscribers": self.subscribers}
         self.obj = ET_Post(self.auth_stub, "TriggeredSend", tscall)
         return self.obj
 
@@ -817,6 +825,7 @@ class ET_Subscriber(ET_CUDSupport):
     def __init__(self):
         super(ET_Subscriber, self).__init__()
         self.obj_type = 'Subscriber'
+
 
 class ET_DataExtension(ET_CUDSupport):
     columns = None
@@ -858,6 +867,7 @@ class ET_DataExtension(ET_CUDSupport):
         obj = super(ET_DataExtension, self).patch()
         del self.props["Fields"]
         return obj
+
 
 class ET_DataExtension_Column(ET_GetSupport):
     def __init__(self):
@@ -902,6 +912,7 @@ class ET_DataExtension_Column(ET_GetSupport):
 
         return obj
 
+
 class ET_DataExtension_Row(ET_CUDSupport):
     Name = None
     CustomerKey = None
@@ -944,7 +955,7 @@ class ET_DataExtension_Row(ET_CUDSupport):
             currentProp = {}
 
             for key, value in self.props.iteritems():
-                currentFields.append({"Name" : key, "Value" : value})
+                currentFields.append({"Name": key, "Value": value})
 
             currentProp['CustomerKey'] = self.CustomerKey
             currentProp['Properties'] = {}
@@ -960,7 +971,7 @@ class ET_DataExtension_Row(ET_CUDSupport):
         currentProp = {}
 
         for key, value in self.props.iteritems():
-            currentFields.append({"Name" : key, "Value" : value})
+            currentFields.append({"Name": key, "Value": value})
 
         currentProp['CustomerKey'] = self.CustomerKey
         currentProp['Properties'] = {}
@@ -975,7 +986,7 @@ class ET_DataExtension_Row(ET_CUDSupport):
         currentProp = {}
 
         for key, value in self.props.iteritems():
-            currentFields.append({"Name" : key, "Value" : value})
+            currentFields.append({"Name": key, "Value": value})
 
         currentProp['CustomerKey'] = self.CustomerKey
         currentProp['Keys'] = {}
@@ -987,30 +998,34 @@ class ET_DataExtension_Row(ET_CUDSupport):
     def getCustomerKey(self):
         if self.CustomerKey is None:
             if self.Name is None:
-                raise Exception('Unable to process DataExtension::Row request due to CustomerKey and Name not being defined on ET_DatExtension::row')
+                raise Exception(
+                    'Unable to process DataExtension::Row request due to CustomerKey and Name not being defined on ET_DatExtension::row')
             else:
                 de = ET_DataExtension()
                 de.auth_stub = self.auth_stub
-                de.props = ["Name","CustomerKey"]
-                de.search_filter = {'Property' : 'CustomerKey','SimpleOperator' : 'equals','Value' : self.Name}
+                de.props = ["Name", "CustomerKey"]
+                de.search_filter = {'Property': 'CustomerKey', 'SimpleOperator': 'equals', 'Value': self.Name}
                 getResponse = de.get()
                 if getResponse.status and len(getResponse.results) == 1 and 'CustomerKey' in getResponse.results[0]:
                     self.CustomerKey = getResponse.results[0]['CustomerKey']
                 else:
-                    raise Exception('Unable to process DataExtension::Row request due to unable to find DataExtension based on Name')
+                    raise Exception(
+                        'Unable to process DataExtension::Row request due to unable to find DataExtension based on Name')
 
 
     def getName(self):
         if self.Name is None:
             if self.CustomerKey is None:
-                raise Exception('Unable to process DataExtension::Row request due to CustomerKey and Name not being defined on ET_DatExtension::row')
+                raise Exception(
+                    'Unable to process DataExtension::Row request due to CustomerKey and Name not being defined on ET_DatExtension::row')
             else:
                 de = ET_DataExtension()
                 de.auth_stub = self.auth_stub
-                de.props = ["Name","CustomerKey"]
-                de.search_filter = {'Property' : 'CustomerKey','SimpleOperator' : 'equals','Value' : self.CustomerKey}
+                de.props = ["Name", "CustomerKey"]
+                de.search_filter = {'Property': 'CustomerKey', 'SimpleOperator': 'equals', 'Value': self.CustomerKey}
                 getResponse = de.get()
                 if getResponse.status and len(getResponse.results) == 1 and 'Name' in getResponse.results[0]:
                     self.Name = getResponse.results[0]['Name']
                 else:
-                    raise Exception('Unable to process DataExtension::Row request due to unable to find DataExtension based on CustomerKey')
+                    raise Exception(
+                        'Unable to process DataExtension::Row request due to unable to find DataExtension based on CustomerKey')

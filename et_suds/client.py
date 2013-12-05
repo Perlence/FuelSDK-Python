@@ -61,6 +61,7 @@ class Client(object):
     @ivar messages: The last sent/received messages.
     @type messages: str[2]
     """
+
     @classmethod
     def items(cls, sobject):
         """
@@ -172,9 +173,11 @@ class Client(object):
         @return: A shallow clone.
         @rtype: L{Client}
         """
+
         class Uninitialized(Client):
             def __init__(self):
                 pass
+
         clone = Uninitialized()
         clone.options = Options()
         cp = Unskin(clone.options)
@@ -271,6 +274,7 @@ class ServiceSelector:
     @ivar __services: A list of I{wsdl} services.
     @type __services: list
     """
+
     def __init__(self, client, services):
         """
         @param client: A et_suds client.
@@ -372,6 +376,7 @@ class PortSelector:
     @ivar __qn: The I{qualified} name of the port (used for logging).
     @type __qn: str
     """
+
     def __init__(self, client, ports, qn):
         """
         @param client: A et_suds client.
@@ -470,6 +475,7 @@ class MethodSelector:
     @ivar __qn: The I{qualified} name of the method (used for logging).
     @type __qn: str
     """
+
     def __init__(self, client, methods, qn):
         """
         @param client: A et_suds client.
@@ -595,16 +601,16 @@ class SoapClient:
         soapenv = binding.get_message(self.method, args, kwargs)
         timer.stop()
         metrics.log.debug(
-                "message for '%s' created: %s",
-                self.method.name,
-                timer)
+            "message for '%s' created: %s",
+            self.method.name,
+            timer)
         timer.start()
         result = self.send(soapenv)
         timer.stop()
         metrics.log.debug(
-                "method '%s' invoked: %s",
-                self.method.name,
-                timer)
+            "method '%s' invoked: %s",
+            self.method.name,
+            timer)
         return result
 
     def send(self, soapenv):
@@ -642,7 +648,7 @@ class SoapClient:
             else:
                 result = self.succeeded(binding, reply.message)
         except TransportError, e:
-            if e.httpcode in (202,204):
+            if e.httpcode in (202, 204):
                 result = None
             else:
                 log.error(self.last_sent())
@@ -656,7 +662,7 @@ class SoapClient:
         @rtype: dict
         """
         action = self.method.soap.action
-        stock = { 'Content-Type' : 'text/xml; charset=utf-8', 'SOAPAction': action }
+        stock = {'Content-Type': 'text/xml; charset=utf-8', 'SOAPAction': action}
         result = dict(stock, **self.options.headers)
         log.debug('headers = %s', result)
         return result
