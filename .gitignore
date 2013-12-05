@@ -33,3 +33,4 @@ objsamples/*.pyc
 
 *~
 config.python
+.idea/*
