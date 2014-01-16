@@ -15,6 +15,10 @@ setup(
     package_data={'FuelSDK': ['*.xml']},
     url='https://github.com/ExactTarget/FuelSDK-Python',
     license='MIT',
+    install_requires=[
+        'pyjwt>=0.1.5',
+        'requests>=1.1.0',
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
